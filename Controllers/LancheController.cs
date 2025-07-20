@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using site.Repositories.Interfaces;
+using site.ViewModels;
 
 namespace site.Controllers
 {
@@ -14,8 +15,11 @@ namespace site.Controllers
 
         public IActionResult List()
         {
-            var lanches = _lancheRepository.Lanches;
-            return View(lanches);
+            var lancheViewModel = new LancheListViewModel();
+            lancheViewModel.Lanches = _lancheRepository.Lanches;
+            lancheViewModel.CategoriaAtual = "Categoria Atual";
+
+            return View(lancheViewModel);
         }
     }
 }
