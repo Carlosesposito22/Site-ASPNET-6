@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using site.Context;
+using site.Models;
 using site.Repositories;
 using site.Repositories.Interfaces;
 
@@ -16,8 +17,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 
 builder.Services.AddTransient<ILancheRepositoy, LancheRepository>();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped(sp => Pedido.GetPedido(sp));
 
 var app = builder.Build();
 
