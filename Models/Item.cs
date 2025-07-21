@@ -17,6 +17,6 @@ namespace site.Models
 
         [StringLength(200)]
         public string PedidoId { get; set; }
-        //public virtual Pedido Pedido { get; set; }
+        public virtual Pedido Pedido { get; set; }
     }
 }
