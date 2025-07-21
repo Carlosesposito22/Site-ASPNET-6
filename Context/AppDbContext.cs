@@ -11,5 +11,6 @@ namespace site.Context
 
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Lanche> Lanches { get; set; }
+        public DbSet<Item> Itens { get; set; }
     }
 }
