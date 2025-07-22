@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddTransient<ILancheRepositoy, LancheRepository>();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped(sp => Pedido.GetPedido(sp));
+builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 var app = builder.Build();
 

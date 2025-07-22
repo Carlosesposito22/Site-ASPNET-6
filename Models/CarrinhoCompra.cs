@@ -3,34 +3,35 @@ using site.Context;
 
 namespace site.Models
 {
-    public class Pedido
+    public class CarrinhoCompra
     {
         private readonly AppDbContext _context;
-        public Pedido(AppDbContext context)
+        public CarrinhoCompra(AppDbContext context)
         {
             _context = context;
         }
 
-        public string PedidoId { get; set; }
+        public string CarrinhoCompraId { get; set; }
         public List<Item> Itens { get; set; }
 
-        public static Pedido GetPedido(IServiceProvider services)
+        public static CarrinhoCompra GetCarrinho(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
-            var context = services.GetService<AppDbContext>();
-            string pedidoId = session.GetString("PedidoId") ?? Guid.NewGuid().ToString();
-            session.SetString("PedidoId", pedidoId);
 
-            return new Pedido(context)
+            var context = services.GetService<AppDbContext>();
+            string carrinhoId = session.GetString("CarrinhoId") ?? Guid.NewGuid().ToString();
+            session.SetString("CarrinhoId", carrinhoId);
+
+            return new CarrinhoCompra(context)
             {
-                PedidoId = pedidoId
+                CarrinhoCompraId = carrinhoId
             };
         }
 
-        public void AdiconarAoPedido(Lanche lanche)
+        public void AdiconarAoCarrinho(Lanche lanche)
         {
             var item = _context.Itens.SingleOrDefault(
-                x => x.Lanche.LancheId == lanche.LancheId && x.PedidoId == PedidoId);
+                x => x.Lanche.LancheId == lanche.LancheId && x.CarrinhoCompraId == CarrinhoCompraId);
 
             if (item == null)
             {
@@ -38,7 +39,7 @@ namespace site.Models
                 {
                     Quantidade = 1,
                     Lanche = lanche,
-                    PedidoId = PedidoId
+                    CarrinhoCompraId = CarrinhoCompraId
                 };
                 _context.Itens.Add(item);
             }
@@ -47,10 +48,10 @@ namespace site.Models
             _context.SaveChanges();
         }
 
-        public int RemoverDoPedido(Lanche lanche)
+        public int RemoverDoCarrinho(Lanche lanche)
         {
             var item = _context.Itens.SingleOrDefault(
-                x => x.Lanche.LancheId == lanche.LancheId && x.PedidoId == PedidoId);
+                x => x.Lanche.LancheId == lanche.LancheId && x.CarrinhoCompraId == CarrinhoCompraId);
 
             var quantidadeLocal = 0;
 
@@ -71,22 +72,22 @@ namespace site.Models
             return quantidadeLocal;
         }
 
-        public List<Item> GetItens()
+        public List<Item> GetCarrinhoCompraItens()
         {
-            return Itens ?? (Itens = _context.Itens.Where(x => x.PedidoId == PedidoId).Include(y => y.Lanche).ToList());
+            return Itens ?? (Itens = _context.Itens.Where(x => x.CarrinhoCompraId == CarrinhoCompraId).Include(y => y.Lanche).ToList());
         }
 
-        public void LimparPedido()
+        public void LimparCarrinhoCompra()
         {
-            var pedido = _context.Itens.Where(item => item.PedidoId == PedidoId);
+            var carrinhoItens = _context.Itens.Where(item => item.CarrinhoCompraId == CarrinhoCompraId);
 
-            _context.Itens.RemoveRange(pedido);
+            _context.Itens.RemoveRange(carrinhoItens);
             _context.SaveChanges();
         }
 
-        public decimal GetValorPedido()
+        public decimal GetValorCarrinhoCompra()
         {
-            return _context.Itens.Where(x => x.PedidoId == PedidoId).Select(y => y.Lanche.Preco * y.Quantidade).Sum();
+            return _context.Itens.Where(x => x.CarrinhoCompraId == CarrinhoCompraId).Select(y => y.Lanche.Preco * y.Quantidade).Sum();
         }
     }
 }

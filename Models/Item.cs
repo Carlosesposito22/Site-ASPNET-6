@@ -16,7 +16,6 @@ namespace site.Models
         public virtual Lanche Lanche { get; set; }
 
         [StringLength(200)]
-        public string PedidoId { get; set; }
-        public virtual Pedido Pedido { get; set; }
+        public string CarrinhoCompraId { get; set; }
     }
 }
