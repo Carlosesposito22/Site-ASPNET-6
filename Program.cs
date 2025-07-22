@@ -7,7 +7,6 @@ using site.Repositories.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 
