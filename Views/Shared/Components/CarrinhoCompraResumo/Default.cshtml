@@ -1,0 +1,11 @@
+﻿@model CarrinhoCompraViewModel
+
+@if(Model.CarrinhoCompra.Itens.Count > 0)
+{
+    <a asp-controller="CarrinhoCompra" asp-action="Index">
+        <span><img src="~/images/Full-Cart-icon.png"/></span>
+        <samp style="color:white">
+            @Model.CarrinhoCompra.Itens.Count
+        </samp>
+    </a>
+}
