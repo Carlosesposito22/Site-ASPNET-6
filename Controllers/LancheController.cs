@@ -21,23 +21,14 @@ namespace site.Controllers
 
             if (string.IsNullOrEmpty(categoria))
             {
-                lanches = _lancheRepository.Lanches.OrderBy(l => l.LancheId);
+                lanches = _lancheRepository.Lanches.OrderBy(l => l.Nome);
                 categoriaAtual = "Todos os lanches";
             }
             else
             {
-                if (string.Equals("Normal", categoria, StringComparison.OrdinalIgnoreCase))
-                {
-                    lanches = _lancheRepository.Lanches
-                        .Where(l => l.Categoria.CategoriaNome.Equals("Normal"))
-                        .OrderBy(l => l.Nome);
-                }
-                else
-                {
-                    lanches = _lancheRepository.Lanches
-                        .Where(l => l.Categoria.CategoriaNome.Equals("Natural"))
-                        .OrderBy(l => l.Nome);
-                }
+                lanches = _lancheRepository.Lanches
+                    .Where(l => l.Categoria.CategoriaNome.Equals(categoria)).OrderBy(l => l.Nome);
+
                 categoriaAtual = categoria;
             }
 
