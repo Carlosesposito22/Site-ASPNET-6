@@ -1,25 +1,42 @@
-﻿<div class="container">
-    <img src="~/images/faleconosco1.jpg" alt="Fale conosco" />
-    <div class="jumbotron">
-        <h3>Queremos ouvir o que você tem a dizer</h3>
-        <p>
-            Se você tiver alguma dúvida ou sugestão fale conosco
-        </p>
-        <p>
-            <span>
-                <img src="~/images/Envelope-icon24.png" />
-            </span>
-            <h5><email endereco="carloseduardoesposito@gmail.com" conteudo="Enviar um email"></email></h5>
-            <br />
-            <span>
-                <img src="~/images/phone-app-icon.png" />
-            </span>
-            <h5>(81) 91234-4321</h5>
-            <br />
-            <span>
-                <img src="~/images/Home-iconred.png" />
-            </span>
-            <h5>Av. José Rufino 456 - 03540-550 - Recife</h5>
-        </p>
+﻿<div class="container my-5">
+    <div class="card shadow-sm overflow-hidden">
+
+        <div style="position: relative;">
+
+            <video class="card-img-top" autoplay muted loop playsinline
+                   style="height: 250px; object-fit: cover; object-position: bottom;">
+                <source src="~/images/video.mp4" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+
+            <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                <h1 class="text-white fw-bold" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
+                    CONTATO
+                </h1>
+            </div>
+
+        </div> <div class="card-body p-4 p-md-5">
+            <h2 class="card-title mb-2">Queremos ouvir o que você tem a dizer</h2>
+            <p class="lead mb-4 pb-2 border-bottom">
+                Se você tiver alguma dúvida ou sugestão, entre em contato através de um dos canais abaixo.
+            </p>
+
+            <ul class="list-unstyled">
+                <li class="d-flex align-items-center mb-3">
+                    <img src="~/images/Envelope-icon24.png" alt="Ícone de email" class="me-3" width="32" height="32" />
+                    <div class="fs-5">
+                        <email endereco="carloseduardoesposito@gmail.com" conteudo="Enviar um e-mail"></email>
+                    </div>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    <img src="~/images/phone-app-icon.png" alt="Ícone de telefone" class="me-3" width="32" height="32" />
+                    <h5 class="mb-0">(81) 91234-4321</h5>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    <img src="~/images/Home-iconred.png" alt="Ícone de endereço" class="me-3" width="32" height="32" />
+                    <h5 class="mb-0">Av. José Rufino 456 - Recife</h5>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
