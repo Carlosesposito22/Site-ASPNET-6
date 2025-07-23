@@ -40,5 +40,12 @@ namespace site.Controllers
 
             return View(lancheViewModel);
         }
+
+        public IActionResult Details(int lancheId)
+        {
+            var lanche = _lancheRepository.Lanches.FirstOrDefault(l => l.LancheId == lancheId);
+
+            return View(lanche);
+        }
     }
 }
