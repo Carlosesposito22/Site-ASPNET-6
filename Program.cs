@@ -18,6 +18,7 @@ builder.Services.AddTransient<ILancheRepositoy, LancheRepository>();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
+builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
 
 var app = builder.Build();
 
