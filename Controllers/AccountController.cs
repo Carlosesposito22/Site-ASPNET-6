@@ -49,13 +49,13 @@ namespace site.Controllers
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(LoginViewModel registerVM)
         {
             if (ModelState.IsValid)
