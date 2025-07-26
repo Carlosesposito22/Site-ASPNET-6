@@ -22,7 +22,6 @@ namespace site.Models
         [Display(Name = "Endereco")]
         public string Endereco1 { get; set; }
 
-        [Required]
         [StringLength(100)]
         [Display(Name = "Complemento")]
         public string Endereco2 { get; set; }
@@ -32,11 +31,9 @@ namespace site.Models
         [Display(Name = "Cep")]
         public string Cep { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string Estado { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string Cidade { get; set; }
 
@@ -70,6 +67,6 @@ namespace site.Models
         [DisplayFormat(DataFormatString = "{0: dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
         public DateTime? PedidoEntrege { get; set; }
 
-        public List<PedidoDetalhe> PedidoItens {  get; set; }
+        public List<PedidoDetalhe> PedidoItens { get; set; }
     }
 }
