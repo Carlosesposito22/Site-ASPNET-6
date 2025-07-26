@@ -47,5 +47,33 @@ namespace site.Controllers
             ModelState.AddModelError("", "Falha ao realizar o login!!");
             return View(loginVM);
         }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(LoginViewModel registerVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser { UserName = registerVM.UserName };
+                var result = await _userManager.CreateAsync(user, registerVM.Password);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    ModelState.AddModelError("Registo", "Falha ao registrar o usuário");
+                }
+            }
+            return View(registerVM);
+        }
     }
 }
