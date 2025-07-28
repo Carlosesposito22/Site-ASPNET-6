@@ -4,6 +4,7 @@ using site.Context;
 using site.Models;
 using site.Repositories;
 using site.Repositories.Interfaces;
+using site.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,15 @@ builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", politica =>
+    {
+        politica.RequireRole("Admin");
+    });
+});
 
 var app = builder.Build();
 
@@ -40,6 +50,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+SeedUserRoleInitial.SeedDatabase(app);
 
 app.UseSession();
 
