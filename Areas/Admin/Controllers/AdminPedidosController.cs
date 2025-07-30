@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
 using site.Context;
 using site.Models;
 
@@ -22,13 +18,21 @@ namespace site.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/AdminPedidos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Nome")
         {
-              return View(await _context.Pedidos.ToListAsync());
+            var resultado = _context.Pedidos.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                resultado = resultado.Where(p => p.Nome.Contains(filter));
+            }
+
+            var model = await PagingList.CreateAsync(resultado, 3, pageindex, sort, "Nome");
+            model.RouteValue = new RouteValueDictionary { { "filter", filter } };
+
+            return View(model);
         }
 
-        // GET: Admin/AdminPedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Pedidos == null)
@@ -46,15 +50,11 @@ namespace site.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // GET: Admin/AdminPedidos/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/AdminPedidos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PedidoId,Nome,Sobrenome,Endereco1,Endereco2,Cep,Estado,Cidade,Telefone,Email,PedidoEnviado,PedidoEntrege")] Pedido pedido)
@@ -68,7 +68,6 @@ namespace site.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // GET: Admin/AdminPedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Pedidos == null)
@@ -84,9 +83,6 @@ namespace site.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // POST: Admin/AdminPedidos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PedidoId,Nome,Sobrenome,Endereco1,Endereco2,Cep,Estado,Cidade,Telefone,Email,PedidoEnviado,PedidoEntrege")] Pedido pedido)
@@ -119,7 +115,6 @@ namespace site.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // GET: Admin/AdminPedidos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Pedidos == null)
@@ -137,7 +132,6 @@ namespace site.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // POST: Admin/AdminPedidos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
