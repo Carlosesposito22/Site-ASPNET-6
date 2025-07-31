@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ReflectionIT.Mvc.Paging;
 using site.Context;
 using site.Models;
+using site.ViewModels;
 
 namespace site.Areas.Admin.Controllers
 {
@@ -16,6 +17,25 @@ namespace site.Areas.Admin.Controllers
         public AdminPedidosController(AppDbContext context)
         {
             _context = context;
+        }
+
+        public IActionResult PedidoLanches(int? id)
+        {
+            var pedido = _context.Pedidos.Include(p => p.PedidoItens)
+                .ThenInclude(p => p.Lanche).FirstOrDefault(p => p.PedidoId == id);
+
+            if (pedido == null)
+            {
+                return View("PedidoNotFound", id.Value);
+            }
+
+            PedidoLancheViewModel pedidoLanche = new PedidoLancheViewModel()
+            {
+                Pedido = pedido,
+                PedidoDetalhes = pedido.PedidoItens
+            };
+
+            return View(pedidoLanche);
         }
 
         public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Nome")
