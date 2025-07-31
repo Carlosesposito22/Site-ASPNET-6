@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
 using site.Context;
 using site.Models;
 using System;
@@ -22,14 +23,21 @@ namespace site.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/AdminLanches
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Nome")
         {
-            var appDbContext = _context.Lanches.Include(l => l.Categoria);
-            return View(await appDbContext.ToListAsync());
+            var result = _context.Lanches.Include(l => l.Categoria).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                result = result.Where(p => p.Nome.Contains(filter));
+            }
+
+            var model = await PagingList.CreateAsync(result, 3, pageindex, sort, "Nome");
+            model.RouteValue = new RouteValueDictionary { { "filter", filter } };
+
+            return View(model);
         }
 
-        // GET: Admin/AdminLanches/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Lanches == null)
@@ -48,16 +56,12 @@ namespace site.Areas.Admin.Controllers
             return View(lanche);
         }
 
-        // GET: Admin/AdminLanches/Create
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "CategoriaNome");
             return View();
         }
 
-        // POST: Admin/AdminLanches/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("LancheId,Nome,DescricaoCurta,DescricaoDetalhada,Preco,ImagemUrl,ImagemThumbnaillUrl,IsLanchePreferido,EmEstoque,CategoriaId")] Lanche lanche)
@@ -72,7 +76,6 @@ namespace site.Areas.Admin.Controllers
             return View(lanche);
         }
 
-        // GET: Admin/AdminLanches/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Lanches == null)
@@ -89,9 +92,6 @@ namespace site.Areas.Admin.Controllers
             return View(lanche);
         }
 
-        // POST: Admin/AdminLanches/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("LancheId,Nome,DescricaoCurta,DescricaoDetalhada,Preco,ImagemUrl,ImagemThumbnaillUrl,IsLanchePreferido,EmEstoque,CategoriaId")] Lanche lanche)
@@ -125,7 +125,6 @@ namespace site.Areas.Admin.Controllers
             return View(lanche);
         }
 
-        // GET: Admin/AdminLanches/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Lanches == null)
@@ -144,7 +143,6 @@ namespace site.Areas.Admin.Controllers
             return View(lanche);
         }
 
-        // POST: Admin/AdminLanches/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
