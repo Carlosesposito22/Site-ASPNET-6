@@ -26,6 +26,7 @@ namespace site.Areas.Admin.Controllers
 
             if (pedido == null)
             {
+                Response.StatusCode = 404;
                 return View("PedidoNotFound", id.Value);
             }
 
