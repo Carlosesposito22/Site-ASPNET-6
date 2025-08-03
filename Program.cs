@@ -16,6 +16,8 @@ builder.Services.AddSession();
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.Configure<ConfigurationImages>(builder.Configuration.GetSection("ConfigurationPastaImagens"));
+
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
