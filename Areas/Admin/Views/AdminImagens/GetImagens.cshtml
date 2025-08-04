@@ -1,0 +1,36 @@
+﻿@model FileManagerModel
+
+@{
+    ViewData["Title"] = "Arquivos";
+}
+
+@if (Model.Files != null)
+{
+    <h3>Images:</h3>
+    <hr />
+    <div class="row">
+        @foreach (var file in Model.Files)
+        {
+            <div class="flex-column">
+                <img src="~/@Model.PathImagesProdutos/@file.Name" width="125" height="125" title="@file.Name" asp-append-version />
+                <div style="padding:10px; text-align:left">
+                    <a asp-controller="AdminImagens" asp-action="DeleteFile" asp-route-fname="@file.Name">Deletar</a>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (ViewData["Erro"] != null)
+{
+    <img src="~/images/erro1.png" width="150" height="150" />
+    <h4>@ViewData["Erro"]</h4>
+}
+<div class="clearfix"></div>
+<hr />
+<div>
+    <span>Para ver o nome do arquivo passa o mouse na imagem</span>
+</div>
+<div class="form-group">
+    <a class="btn btn-outline-info" asp-controller="AdminImagens" asp-action="Index">Retornar</a>
+</div>

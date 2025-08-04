@@ -10,6 +10,7 @@ namespace site.Areas.Admin.Controllers
     public class AdminImagensController : Controller
     {
         private readonly static int LIMITE_DE_ARQUIVOS = 10;
+        private static string IMAGES_PATH;
 
         private readonly ConfigurationImages _myConfig;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -18,6 +19,8 @@ namespace site.Areas.Admin.Controllers
         {
             _myConfig = myConfig.Value;
             _webHostEnvironment = webHostEnvironment;
+
+            IMAGES_PATH = Path.Combine(_webHostEnvironment.WebRootPath, _myConfig.NomePastaImagensProdutos);
         }
 
         public IActionResult Index()
@@ -47,13 +50,12 @@ namespace site.Areas.Admin.Controllers
             if (!IsValidFiles(files)) return View(ViewData);
 
             var filePathsName = new List<string>();
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, _myConfig.NomePastaImagensProdutos);
 
             foreach (var formFile in files)
             {
                 if (formFile.FileName.Contains(".jpg") || formFile.FileName.Contains(".png") || formFile.FileName.Contains(".gif"))
                 {
-                    var fileNameWithPath = string.Concat(filePath, "\\", formFile.FileName);
+                    var fileNameWithPath = string.Concat(IMAGES_PATH, "\\", formFile.FileName);
                     filePathsName.Add(fileNameWithPath);
 
                     using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
@@ -67,6 +69,37 @@ namespace site.Areas.Admin.Controllers
             ViewBag.Arquivos = filePathsName;
 
             return View(ViewData);
+        }
+
+        [HttpGet]
+        public IActionResult GetImagens()
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(IMAGES_PATH);
+            FileInfo[] files = directoryInfo.GetFiles();
+
+            if (files.Length == 0)
+            {
+                ViewData["Erro"] = $"Nenhum arquivo encontrado no servidor";
+            }
+
+            FileManagerModel model = new FileManagerModel()
+            {
+                PathImagesProdutos = _myConfig.NomePastaImagensProdutos,
+                Files = files
+            };
+            return View(model);
+        }
+
+        public IActionResult DeleteFile(string fname)
+        {
+             string imagePath = Path.Combine(IMAGES_PATH + "\\", fname);
+
+            if ((System.IO.File.Exists(imagePath)))
+            {
+                System.IO.File.Delete(imagePath);
+                ViewData["Deletado"] = $"Arquivo(s) {imagePath} deletado com sucesso";
+            }
+            return View("index");
         }
     }
 }
